@@ -1,6 +1,6 @@
 // Offline support: keep the app files on the device.
 // Bump VERSION on every release so devices pick up new files.
-const VERSION = 'haven-v9';
+const VERSION = 'haven-v10';
 const SHELL = [
   './',
   'index.html',

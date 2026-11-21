@@ -10,6 +10,7 @@ import { Canopy } from './games/bubbles/view.js';
 import { sfx } from './sound.js';
 import { isStandalone, isAppleTouch } from './native.js';
 import { toast } from './ui.js';
+import * as store from './store.js';
 
 applyTheme();
 
@@ -33,6 +34,16 @@ function greeting() {
   if (hr < 12) return 'Good morning';
   if (hr < 17) return 'Good afternoon';
   return 'Good evening';
+}
+
+const GAMES = { arrows, bubbles };
+
+// The level to open for a game: the board she left half-played,
+// otherwise her highest unlocked level.
+function resumeHash(mod) {
+  const p = mod.progress();
+  const cur = store.game(mod.mapCfg.id).current;
+  return `#/${mod.mapCfg.route}/${(cur && cur.level) || p.next}`;
 }
 
 function gameCard(g, p, hint) {
@@ -102,7 +113,7 @@ function homeScreen(go) {
     const card = e.target.closest('[data-open]');
     if (card) {
       sfx.tap();
-      go(`#/${card.dataset.open}`);
+      go(resumeHash(GAMES[card.dataset.open]));
     }
   });
 
@@ -118,6 +129,7 @@ function homeScreen(go) {
 function route() {
   const hash = location.hash || '#/';
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+  if (GAMES[parts[0]] && parts[1] && store.getSettings().lastGame !== parts[0]) store.setSetting('lastGame', parts[0]);
   if (parts[0] === 'arrows' && parts[1]) return arrows.playScreen(go, parseInt(parts[1], 10));
   if (parts[0] === 'arrows') return arrows.mapScreen(go);
   if (parts[0] === 'bubbles' && parts[1]) return bubbles.playScreen(go, parseInt(parts[1], 10));
@@ -146,6 +158,14 @@ function go(hash, force = false) {
     return;
   }
   location.hash = hash;
+}
+
+// Opening the app from its icon lands on the home page (no hash).
+// Go straight to the level she was on in the last game she played.
+// The grid button still leads to the level map, and back to home.
+{
+  const last = GAMES[store.getSettings().lastGame];
+  if (last && (!location.hash || location.hash === '#/')) history.replaceState(null, '', resumeHash(last));
 }
 
 window.addEventListener('hashchange', show);
