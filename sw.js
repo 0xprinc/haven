@@ -1,11 +1,12 @@
 // Offline support: keep the app files on the device.
 // Bump VERSION on every release so devices pick up new files.
-const VERSION = 'haven-v10';
+const VERSION = 'haven-v11';
 const SHELL = [
   './',
   'index.html',
   'manifest.webmanifest',
   'css/app.css',
+  'css/words.css',
   'js/app.js',
   'js/ui.js',
   'js/store.js',
@@ -27,6 +28,16 @@ const SHELL = [
   'js/games/bubbles/levels.js',
   'js/games/bubbles/shots.js',
   'js/games/bubbles/bot.js',
+  'js/games/words/game.js',
+  'js/games/words/chapters.js',
+  'js/games/words/grid.js',
+  'js/games/words/board.js',
+  'js/games/words/fx.js',
+  'js/games/words/cast.js',
+  'js/games/words/art.js',
+  'js/games/words/audio.js',
+  'js/games/words/story.js',
+  'js/games/words/scenes.js',
   'icons/apple-touch-icon.png',
   'icons/icon-192.png',
   'icons/favicon.png',

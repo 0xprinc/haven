@@ -7,6 +7,9 @@ import { Board } from './games/arrows/board.js';
 import * as bubbles from './games/bubbles/game.js';
 import { buildLevel } from './games/bubbles/levels.js';
 import { Canopy } from './games/bubbles/view.js';
+import * as words from './games/words/game.js';
+import { kikoSVG, Actor } from './games/words/cast.js';
+import { backdrop } from './games/words/art.js';
 import { sfx } from './sound.js';
 import { isStandalone, isAppleTouch } from './native.js';
 import { toast } from './ui.js';
@@ -36,7 +39,7 @@ function greeting() {
   return 'Good evening';
 }
 
-const GAMES = { arrows, bubbles };
+const GAMES = { arrows, bubbles, words };
 
 // The level to open for a game: the board she left half-played,
 // otherwise her highest unlocked level.
@@ -65,6 +68,7 @@ function gameCard(g, p, hint) {
 function homeScreen(go) {
   const pa = arrows.progress();
   const pb = bubbles.progress();
+  const pw = words.progress();
   const date = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
 
   const el = h(`<section class="screen">
@@ -80,6 +84,7 @@ function homeScreen(go) {
           <p>Calm games with no ads and no rush. Your progress is saved as you play.</p>
         </div>
         <div class="games">
+          ${gameCard(words, pw, 'Help Kiko find the lost words')}
           ${gameCard(bubbles, pb, 'Free the birds, pop the bubbles')}
           ${gameCard(arrows, pa, 'Slide every arrow off the board')}
           <div class="soon-card">
@@ -89,9 +94,9 @@ function homeScreen(go) {
           </div>
         </div>
         <div class="stats">
-          <div class="stat"><b>${pa.cleared + pb.cleared}</b><span>levels cleared</span></div>
-          <div class="stat"><b>${pa.stars + pb.stars}</b><span>stars earned</span></div>
-          <div class="stat"><b>2</b><span>games · more coming</span></div>
+          <div class="stat"><b>${pa.cleared + pb.cleared + pw.cleared}</b><span>levels cleared</span></div>
+          <div class="stat"><b>${pa.stars + pb.stars + pw.stars}</b><span>stars earned</span></div>
+          <div class="stat"><b>3</b><span>games · more coming</span></div>
         </div>
         <div class="footnote">No ads. No sign-in. Just games.</div>
       </div>
@@ -105,6 +110,13 @@ function homeScreen(go) {
     const pb = el.querySelector('.game-card.bubbles .preview');
     if (pa) demos.push(new Board(pa, generateLevel(24), { demo: true }));
     if (pb) demos.push(new Canopy(pb, buildLevel(14), { demo: true, noIntro: true }));
+    const pw = el.querySelector('.game-card.words .preview');
+    if (pw) {
+      pw.innerHTML = `<div class="ws-card-art">${backdrop('shrine')}<div class="ws-card-letters">${[...'KAMI'].map((c) => `<b>${c}</b>`).join('')}</div>${kikoSVG('card-kiko')}</div>`;
+      const actor = new Actor(pw.querySelector('.card-kiko'));
+      const hop = setInterval(() => actor.feel('happy', 700), 4200);
+      demos.push({ destroy() { clearInterval(hop); actor.destroy(); }, themeChanged() {} });
+    }
   });
   const offTheme = onTheme(() => demos.forEach((d) => (d.readColors ? d.readColors() : d.themeChanged())));
 
@@ -134,6 +146,8 @@ function route() {
   if (parts[0] === 'arrows') return arrows.mapScreen(go);
   if (parts[0] === 'bubbles' && parts[1]) return bubbles.playScreen(go, parseInt(parts[1], 10));
   if (parts[0] === 'bubbles') return bubbles.mapScreen(go);
+  if (parts[0] === 'words' && parts[1]) return words.playScreen(go, parseInt(parts[1], 10));
+  if (parts[0] === 'words') return words.mapScreen(go);
   return homeScreen(go);
 }
 

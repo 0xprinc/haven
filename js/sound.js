@@ -29,6 +29,15 @@ function on() {
   return getSettings().sound && ensure() && ctx.state === 'running';
 }
 
+// For games that build their own sounds (and narration) on the same output.
+export function audio() {
+  return on() ? { ctx, out: master } : null;
+}
+export function audioReady() {
+  const c = ensure();
+  return !!c && c.state === 'running';
+}
+
 function tone({ freq, type = 'sine', dur = 0.25, gain = 0.2, attack = 0.005, glide = 0, delay = 0 }) {
   const t = ctx.currentTime + delay;
   const o = ctx.createOscillator();
