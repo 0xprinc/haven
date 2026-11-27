@@ -76,7 +76,7 @@ async function run(id) {
   const voices = all.map((l) => loadVoice(`audio/words/${l.file}`));
   const bed = ambient(sc.pages[0].mood);
   el.classList.add('on');
-  await wait(2200);
+  await wait(1600);
   titleEl.classList.add('gone');
 
   let li = 0;
@@ -110,8 +110,8 @@ async function run(id) {
       setTimeout(() => old.remove(), 900);
     }
     prev = pg;
-    if ((page.fx || []).includes('flash')) setTimeout(() => flash(el), 500);
-    await wait(500);
+    if ((page.fx || []).includes('flash')) setTimeout(() => flash(el), 400);
+    await wait(350);
 
     for (let k = 0; k < page.lines.length; k++, li++) {
       const [who, text] = page.lines[k];

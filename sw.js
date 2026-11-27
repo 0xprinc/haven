@@ -1,6 +1,6 @@
 // Offline support: keep the app files on the device.
 // Bump VERSION on every release so devices pick up new files.
-const VERSION = 'haven-v11';
+const VERSION = 'haven-v12';
 const SHELL = [
   './',
   'index.html',
@@ -38,6 +38,19 @@ const SHELL = [
   'js/games/words/audio.js',
   'js/games/words/story.js',
   'js/games/words/scenes.js',
+  'audio/words/chapter1-1.mp3',
+  'audio/words/chapter1-2.mp3',
+  'audio/words/chapter1-3.mp3',
+  'audio/words/chapter1-4.mp3',
+  'audio/words/pon-1.mp3',
+  'audio/words/pon-2.mp3',
+  'audio/words/pon-3.mp3',
+  'audio/words/pon-4.mp3',
+  'audio/words/prologue-1.mp3',
+  'audio/words/prologue-2.mp3',
+  'audio/words/prologue-3.mp3',
+  'audio/words/prologue-4.mp3',
+  'audio/words/prologue-5.mp3',
   'icons/apple-touch-icon.png',
   'icons/icon-192.png',
   'icons/favicon.png',
